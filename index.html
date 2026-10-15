@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A browser simulation of inherited beetle camouflage and natural selection in a fictional marsh." />
+    <title>Marsh Beetles | Selection Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">MARSH BEETLES · SELECTION LAB</p>
+          <h1>Which pattern blends in?</h1>
+          <p class="lede">Test how inherited patterns can become more or less common when a marsh habitat changes.</p>
+        </div>
+        <button class="text-button" id="simplifications-button" aria-expanded="false" aria-controls="simplifications">Model notes</button>
+      </header>
+
+      <aside id="simplifications" class="model-notes" hidden>
+        <strong>A deliberately small model:</strong> each beetle has one of two inherited patterns; a visually hunting finch detects contrasting patterns more often; survivors reproduce. Rare inherited pattern variation can occur in offspring, never because a beetle needs it. Individuals never change pattern during their lifetime. Real populations have more variation and ecological pressures.
+      </aside>
+
+      <section class="question-card" aria-labelledby="question-heading">
+        <div>
+          <p class="eyebrow">1. PREDICT</p>
+          <h2 id="question-heading">How does background affect which inherited pattern becomes common?</h2>
+        </div>
+        <label class="prediction-field" for="prediction">
+          <span>Your prediction (optional)</span>
+          <select id="prediction" aria-describedby="prediction-help">
+            <option value="">Make a prediction…</option>
+            <option value="pale">Pale speckled beetles may increase</option>
+            <option value="dark">Dark grey speckled beetles may increase</option>
+            <option value="same">Neither may change much</option>
+          </select>
+          <small id="prediction-help">Your prediction stays with this trial while you investigate.</small>
+        </label>
+      </section>
+
+      <div class="workspace">
+        <section class="habitat-panel panel" aria-labelledby="habitat-heading">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">PLAY AREA</p>
+              <h2 id="habitat-heading">Marsh habitat</h2>
+            </div>
+            <span class="generation-badge" id="generation-badge" aria-label="Generation 0">Generation 0</span>
+          </div>
+          <div class="marsh pale" id="marsh" role="img" aria-describedby="marsh-description">
+            <div class="beetle-field" id="beetle-field" aria-hidden="true"></div>
+            <div class="finch-flyover" id="finch-flyover" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="event-card" id="event-card">Choose a habitat, then run a generation.</div>
+          </div>
+          <p class="sr-only" id="marsh-description">A decorative marsh scene. Population counts and outcomes are available below as text and a table.</p>
+          <div class="legend" aria-label="Pattern legend">
+            <span><i class="swatch pale-pattern"></i>Pale speckled beetle</span>
+            <span><i class="swatch dark-pattern"></i>Dark grey speckled beetle</span>
+          </div>
+        </section>
+
+        <section class="controls-panel panel" aria-labelledby="controls-heading">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">CHANGE ONE THING</p>
+              <h2 id="controls-heading">Experiment controls</h2>
+            </div>
+          </div>
+          <fieldset>
+            <legend>Substrate background</legend>
+            <div class="segmented-control" aria-label="Substrate background">
+              <button type="button" class="choice active" data-habitat="pale" aria-pressed="true">Pale dry silt</button>
+              <button type="button" class="choice" data-habitat="dark" aria-pressed="false">Dark wet sediment</button>
+              <button type="button" class="choice" data-habitat="mixed" aria-pressed="false">Mixed marsh</button>
+            </div>
+            <p class="hint" id="habitat-hint">On pale silt, dark speckles tend to stand out more.</p>
+          </fieldset>
+          <fieldset>
+            <legend>Predation pressure</legend>
+            <label class="range-label" for="pressure"><span>Chance a contrasting beetle is detected</span><output id="pressure-output" for="pressure">Medium</output></label>
+            <input id="pressure" type="range" min="1" max="3" value="2" step="1" />
+          </fieldset>
+          <div class="run-controls">
+            <button id="step-button" class="primary-button">Run one generation <span aria-hidden="true">→</span></button>
+            <button id="run-button" class="secondary-button">Run 6 generations</button>
+          </div>
+          <div class="utility-controls">
+            <button id="reset-button" class="text-button">Reset same seed</button>
+            <button id="new-trial-button" class="text-button">New trial</button>
+          </div>
+          <p class="seed-readout">Trial seed <code id="seed-readout"></code> <button id="copy-seed-button" class="copy-button" aria-label="Copy trial seed">Copy</button></p>
+        </section>
+      </div>
+
+      <section class="evidence-grid" aria-label="Population evidence">
+        <section class="outcome panel" aria-labelledby="outcome-heading">
+          <div class="panel-heading"><div><p class="eyebrow">WHAT HAPPENED?</p><h2 id="outcome-heading">Generation evidence</h2></div></div>
+          <p class="outcome-copy" id="outcome-copy" aria-live="polite">Start with 48 beetles: equal numbers of each inherited pattern.</p>
+          <dl class="stat-row">
+            <div><dt>Total</dt><dd id="total-count">48</dd></div>
+            <div><dt>Pale</dt><dd id="pale-count">24</dd></div>
+            <div><dt>Dark</dt><dd id="dark-count">24</dd></div>
+          </dl>
+          <div class="proportion-bar" aria-hidden="true"><div id="pale-bar"></div><div id="dark-bar"></div></div>
+          <p class="bar-labels"><span id="pale-percent">50% pale</span><span id="dark-percent">50% dark</span></p>
+        </section>
+        <section class="chart-panel panel" aria-labelledby="chart-heading">
+          <div class="panel-heading"><div><p class="eyebrow">POPULATION OVER TIME</p><h2 id="chart-heading">Inherited-pattern proportion</h2></div><div><button class="text-button" id="expand-chart" type="button" aria-expanded="false">Expand graph</button><button class="text-button" id="clear-chart-selection" type="button" disabled>Clear range</button></div></div>
+          <p class="chart-key"><span class="key-pale">● Pale Speckled Beetles</span><span class="key-dark">■ Dark Grey Speckled Beetles</span></p>
+          <fieldset class="chart-controls"><legend>Graph line styles</legend><p id="graph-style-help">Choose line colors and style, then select Update graph.</p><label>Pale line color <select id="pale-color" aria-describedby="graph-style-help"><option value="#b8862c">Gold</option><option value="#8b4c62">Plum</option><option value="#176b83">Blue</option></select></label><label>Dark grey line color <select id="dark-color" aria-describedby="graph-style-help"><option value="#285c57">Teal</option><option value="#50436f">Purple</option><option value="#7b3f2f">Rust</option></select></label><label>Dark grey line <select id="dark-dash" aria-describedby="graph-style-help"><option value="7 4">Dashed</option><option value="2 3">Dotted</option><option value="">Solid</option></select></label><button id="update-chart" class="secondary-button" type="button" disabled>Update graph</button></fieldset>
+          <svg id="chart" viewBox="0 0 540 210" role="group" aria-labelledby="chart-title chart-description">
+            <title id="chart-title">Pale and dark grey beetle proportions by generation</title>
+            <desc id="chart-description">The chart updates after each completed generation. A data table follows.</desc>
+          </svg>
+          <p class="chart-selection" id="chart-selection" aria-live="polite">Select two points to compare an average change across generations.</p>
+          <p class="sr-only" id="graph-style-status" aria-live="polite"></p>
+        </section>
+      </section>
+
+      <section class="table-panel panel" aria-labelledby="table-heading">
+        <div class="panel-heading"><div><p class="eyebrow">CHECK THE NUMBERS</p><h2 id="table-heading">Run record</h2></div><p class="table-note">Repeat a trial to see why chance matters.</p></div>
+        <div class="table-wrap" tabindex="0" aria-label="Scrollable run record"><table><thead><tr><th>Generation</th><th>Habitat</th><th>Pale</th><th>Dark grey</th><th>Total</th><th>Pale proportion</th></tr></thead><tbody id="history-body"></tbody></table></div>
+        <div class="reflection"><p class="eyebrow">3. EXPLAIN</p><p id="reflection-prompt">After you run a generation, use two values in the table to support or revise your prediction. Did any individual change pattern during its lifetime?</p></div>
+      </section>
+
+      <footer>Original fictional model for learning. It shows a population pattern, not a prediction for a real species.</footer>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
